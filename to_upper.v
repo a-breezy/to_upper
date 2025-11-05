@@ -12,8 +12,8 @@ module to_upper (
     // Defining function 1: a4'(a0 + a1 + a2 + a3)
     // define wires
     wire f1_w_a4_not; // inverter wires
-    wire f1_w_or_gate_1, f1_w_or_gate_2, f1_w_or_gate_3; // output of first or gate
-    wire f1_w_and_gate_1; // output of first and gate
+    wire f1_w_or_gate_1, f1_w_or_gate_2, f1_w_or_gate_3; // output of or gates
+    wire f1_w_and_gate_1; // output of and gate
 
     // define inverter gates
     not #(5) G_f1_not4(f1_w_a4_not, a4);
@@ -21,16 +21,16 @@ module to_upper (
     // define or/and gates
     or #(10) G_f1_or1(f1_w_or_gate_1, a0, a1);
     or #(10) G_f1_or2(f1_w_or_gate_2, f1_w_or_gate_1, a2);
-    or #(10) G_f1_or3(f1_w_or_gate_3, f1_w_or_gate_3, a3);
+    or #(10) G_f1_or3(f1_w_or_gate_3, f1_w_or_gate_2, a3);
     and #(10) G_f1_and(f1, f1_w_a4_not, f1_w_or_gate_3); // output function 1
 
 
     // Defining function 2: a4(a3' + a3a2'(a1' + a0'))
     // define wires
     wire f2_w_a0_not, f2_w_a1_not, f2_w_a2_not, f2_w_a3_not;
-    wire f2_w_or_gate_2, f2_w_or_gate_3;
-    wire f2_w_and_gate_2, f2_w_and_gate_3;
-    wire f2_logic_result;
+    wire f2_w_or_gate_1, f2_w_or_gate_2;
+    wire f2_w_and_gate_1, f2_w_and_gate_2;
+    // wire f2_logic_result;
 
     // define inverter gates
     not #(5) G_f2_not0(f2_w_a0_not, a0);
@@ -39,11 +39,15 @@ module to_upper (
     not #(5) G_f2_not3(f2_w_a3_not, a3);
 
     // define or/and gates
-    or #(10) G_f2_or2(f2_w_or_gate_2, f2_w_a1_not, f2_w_a0_not);
-    and #(10) G_f2_and1(f2_w_and_gate_2, f2_w_a2_not, f2_w_or_gate_2);
-    and #(10) G_f2_and2(f2_w_and_gate_3, f2_w_and_gate_2, a3);
-    or #(10) G_f2_or3(f2_logic_result, f2_w_a3_not, f2_w_and_gate_3);
-    and #(10) G_f2_and(f2, a4, f2_logic_result);
+    or #(10) G_f2_or1(f2_w_or_gate_1, f2_w_a1_not, f2_w_a0_not);
+    and #(10) G_f2_and1(f2_w_and_gate_1, f2_w_or_gate_1, f2_w_a2_not);
+    or #(10) G_f2_or2(f2_w_or_gate_2, f2_w_and_gate_1, f2_w_a3_not);
+    and #(10) G_f2_and2(f2, f2_w_or_gate_2, a4);
+
+    // and #(10) G_f2_and1(f2_w_and_gate_1, f2_w_a2_not, f2_w_or_gate_1);
+    // and #(10) G_f2_and2(f2_w_and_gate_2, f2_w_and_gate_1, a3);
+    // or #(10) G_f2_or2(f2_logic_result, f2_w_a3_not, f2_w_and_gate_3);
+    // and #(10) G_f2_and(f2, a4, f2_logic_result);
 
     // Defining function 3: a7'a6a5
     // define wires
@@ -55,7 +59,7 @@ module to_upper (
     and #(10) G_f3_and1(w_f3_and, a5, a6);
     and #(10) G_f3_and(f3, w_a7_not, w_f3_and);  
 
-    wire f1_or_f2;
+    wire f1_or_f2; // connect f1 and f2
     or #(10) G_f2_f1_or(f1_or_f2, f1, f2);
 
     // connecting F = f1f2f2
