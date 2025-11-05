@@ -59,10 +59,11 @@ module to_upper (
     and #(10) G_f3_and1(w_f3_and, a5, a6);
     and #(10) G_f3_and(f3, w_a7_not, w_f3_and);  
 
-    wire f1_or_f2; // connect f1 and f2
+    // connect f1 and f2 with an or gate
+    wire f1_or_f2; 
     or #(10) G_f2_f1_or(f1_or_f2, f1, f2);
 
-    // connecting F = f1f2f2
+    // connecting F = f1f2f2 with and gate
     and #(10) G_F_and(is_lowercase, f1_or_f2, f3);
 
     // Generate output:
